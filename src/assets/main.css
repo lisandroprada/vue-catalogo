@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.drawer-open .z-index-adjust {
+    z-index: 1 !important;
+}
+
+#drawer-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000; /* Asegurarse de que el contenedor tenga un z-index suficientemente alto */
+}
+
+@layer utilities {
+    .z-stack-sidebar {
+        @apply z-50;
+    }
+
+    .z-stack-drawer {
+        @apply z-60;
+    }
+
+    .z-stack-backdrop {
+        @apply z-55;
+    }
+}

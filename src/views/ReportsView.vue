@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ViewWrapper from "@/components/layout/ViewWrapper.vue";
+import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
 import {
     Chart as ChartJS,
     CategoryScale,

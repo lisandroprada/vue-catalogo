@@ -4,6 +4,8 @@ import ViewWrapper from "@/components/layout/ViewWrapper.vue";
 import { Calendar } from "v-calendar";
 import "v-calendar/dist/style.css";
 
+import { PlusIcon } from "@heroicons/vue/24/outline";
+
 // Eventos de ejemplo
 const events = ref([
     {
