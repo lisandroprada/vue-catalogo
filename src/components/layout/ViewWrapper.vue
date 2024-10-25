@@ -28,7 +28,10 @@ const breadcrumbs = computed(() => {
 </script>
 
 <template>
-    <div class="min-h-full bg-gray-50 dark:bg-gray-900">
+    <div
+        class="min-h-full bg-gray-50 dark:bg-gray-900"
+        style="margin-left: calc(3rem; margin-right: 4rem;"
+    >
         <!-- Breadcrumb -->
         <nav
             class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5"

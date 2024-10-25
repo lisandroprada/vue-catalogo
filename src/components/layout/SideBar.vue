@@ -39,26 +39,24 @@
                             >{{ item.name }}</span
                         >
                     </RouterLink>
-                    <div
-                        v-else
-                        :key="item.name"
-                        @click="item.action"
-                        :class="[
-                            'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
-                            'h-16 flex flex-col items-center justify-center transition-colors duration-200 cursor-pointer',
-                        ]"
-                    >
-                        <component :is="item.icon" class="h-6 w-6" />
-                        <span
-                            v-if="isOpen"
-                            class="text-xs mt-1 text-center px-1"
-                            >{{ item.name }}</span
-                        >
-                    </div>
                 </template>
             </nav>
 
-            <!-- Settings at bottom -->
+            <!-- Users and Settings at bottom -->
+            <RouterLink
+                to="/users"
+                :class="[
+                    isRouteActive('/users')
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
+                    'h-16 flex flex-col items-center justify-center transition-colors duration-200',
+                    'border-t border-gray-200 dark:border-gray-700',
+                ]"
+            >
+                <UsersIcon class="h-6 w-6" />
+                <span v-if="isOpen" class="text-xs mt-1">Usuarios</span>
+            </RouterLink>
+
             <RouterLink
                 to="/settings"
                 :class="[
@@ -142,12 +140,11 @@ import {
     TruckIcon,
     BanknotesIcon,
     XMarkIcon,
-    ChatBubbleLeftRightIcon, // Importa el icono de chat
+    UsersIcon, // Importamos el icono de usuarios
 } from "@heroicons/vue/24/outline";
 
 const menuStore = useMenuStore();
 const { isRouteActive } = useActiveRoute();
-const showChatDrawer = ref(false); // Estado para controlar la visibilidad del ChatDrawer
 
 const navigation = [
     {
@@ -190,11 +187,6 @@ const navigation = [
         name: "Blank Page",
         icon: DocumentTextIcon,
         href: "/blank",
-    },
-    {
-        name: "Chat",
-        icon: ChatBubbleLeftRightIcon, // Icono representativo
-        action: () => (showChatDrawer.value = true), // Acción para abrir el ChatDrawer
     },
 ];
 

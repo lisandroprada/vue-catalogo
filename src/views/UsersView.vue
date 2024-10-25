@@ -1,15 +1,13 @@
-<template>
-    <div class="about">
-        <h1>This is an about page</h1>
-    </div>
-</template>
+<script setup>
+import ViewWrapper from "@/components/layout/ViewWrapper.vue";
+import UsersList from "@/components/users/UsersList.vue";
 
-<style>
-@media (min-width: 1024px) {
-    .about {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-}
-</style>
+const title = "Usuarios";
+const subtitle = "Gestión de usuarios del sistema";
+</script>
+
+<template>
+    <ViewWrapper :title="title" :subtitle="subtitle">
+        <UsersList />
+    </ViewWrapper>
+</template>

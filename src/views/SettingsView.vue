@@ -1,15 +1,19 @@
-<template>
-    <div class="about">
-        <h1>This is an about page</h1>
-    </div>
-</template>
+<script setup>
+import ViewWrapper from "@/components/layout/ViewWrapper.vue";
+import GeneralSettings from "@/components/settings/GeneralSettings.vue";
+import UserManagement from "@/components/settings/UserManagement.vue";
+import RoleManagement from "@/components/settings/RoleManagement.vue";
+import PermissionManagement from "@/components/settings/PermissionManagement.vue";
 
-<style>
-@media (min-width: 1024px) {
-    .about {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-}
-</style>
+const title = "Configuraciones";
+const subtitle = "Administra las configuraciones del sistema";
+</script>
+
+<template>
+    <ViewWrapper :title="title" :subtitle="subtitle">
+        <GeneralSettings />
+        <UserManagement />
+        <RoleManagement />
+        <PermissionManagement />
+    </ViewWrapper>
+</template>

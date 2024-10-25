@@ -8,6 +8,7 @@ import ContratosView from "../views/ContratosView.vue";
 import ProveedoresView from "../views/ProveedoresView.vue";
 import BancosView from "../views/BancosView.vue";
 import BlankView from "../views/BlankView.vue";
+import UsersView from "../views/UsersView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,6 +73,11 @@ const router = createRouter({
       path: "/blank",
       name: "blank",
       component: BlankView,
+    },
+    {
+      path: "/users", // Nueva ruta para UsersView
+      name: "users",
+      component: UsersView,
     },
   ],
 });
