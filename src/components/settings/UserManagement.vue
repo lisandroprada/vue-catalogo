@@ -4,9 +4,7 @@
             <h2 class="text-lg font-medium text-gray-900 dark:text-white">
                 Gestión de Usuarios
             </h2>
-            <button @click="showUserDrawer = true" class="btn-primary">
-                Nuevo Usuario
-            </button>
+            <UserGroupIcon class="h-6 w-6 text-gray-500 dark:text-gray-400" />
         </div>
         <div class="card-body">
             <UsersList @edit="handleEditUser" @view="handleViewUser" />
@@ -23,6 +21,7 @@
 import { ref } from "vue";
 import UsersList from "@/components/users/UsersList.vue";
 import UserDrawer from "@/components/users/UserDrawer.vue";
+import { UserGroupIcon } from "@heroicons/vue/24/outline";
 
 const showUserDrawer = ref(false);
 const drawerMode = ref("create");

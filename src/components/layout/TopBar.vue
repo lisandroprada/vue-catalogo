@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import {
     Bars3Icon,
     BellIcon,
@@ -19,6 +20,7 @@ const menuStore = useMenuStore();
 const notifications = ref(3);
 const { isDark, toggleDark } = useDarkMode();
 const isProfileMenuOpen = ref(false);
+const router = useRouter();
 
 const closeProfileMenu = () => {
     isProfileMenuOpen.value = false;
@@ -27,7 +29,8 @@ const closeProfileMenu = () => {
 // Simulación de logout
 const handleLogout = () => {
     console.log("Logout");
-    // Aquí iría tu lógica de logout
+    localStorage.removeItem("authToken"); // Eliminar el token de autenticación
+    router.push("/login"); // Redirigir al usuario a la página de inicio de sesión
 };
 </script>
 
@@ -115,7 +118,7 @@ const handleLogout = () => {
                         </RouterLink>
 
                         <RouterLink
-                            to="/account-settings"
+                            to="/settings"
                             class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-200"
                             @click="isProfileMenuOpen = false"
                         >

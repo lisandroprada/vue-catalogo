@@ -28,8 +28,8 @@ const propiedad = ref({
     precio: "",
     direccion: "",
     clients: [],
-    latitud: -34.603722,
-    longitud: -58.381592,
+    latitud: -43.29969127755103,
+    longitud: -65.1023,
     ...props.initialData,
 });
 
@@ -38,7 +38,7 @@ const imagenes = ref([]);
 const isSubmitting = ref(false);
 const errorMessage = ref("");
 
-const mapCenter = ref([propiedad.value.latitud, propiedad.value.longitud]);
+const mapCenter = ref([-43.29969127755103, -65.1021053755102]);
 const zoom = ref(13);
 
 const tiposPropiedad = [

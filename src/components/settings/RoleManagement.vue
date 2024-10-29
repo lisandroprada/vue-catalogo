@@ -4,9 +4,7 @@
             <h2 class="text-lg font-medium text-gray-900 dark:text-white">
                 Gestión de Roles
             </h2>
-            <button @click="showRoleDrawer = true" class="btn-primary">
-                Nuevo Rol
-            </button>
+            <BriefcaseIcon class="h-6 w-6 text-gray-500 dark:text-gray-400" />
         </div>
         <div class="card-body">
             <RolesList @edit="handleEditRole" @view="handleViewRole" />
@@ -23,6 +21,7 @@
 import { ref } from "vue";
 import RolesList from "@/components/roles/RolesList.vue";
 import RoleDrawer from "@/components/roles/RoleDrawer.vue";
+import { BriefcaseIcon } from "@heroicons/vue/24/outline";
 
 const showRoleDrawer = ref(false);
 const drawerMode = ref("create");

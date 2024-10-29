@@ -1,37 +1,5 @@
-<script setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
-
-const props = defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-    subtitle: {
-        type: String,
-        default: "",
-    },
-});
-
-const route = useRoute();
-
-// Generar breadcrumbs basado en la ruta actual
-const breadcrumbs = computed(() => {
-    const paths = route.path.split("/").filter(Boolean);
-    return paths.map((path, index) => ({
-        name: path.charAt(0).toUpperCase() + path.slice(1),
-        path: "/" + paths.slice(0, index + 1).join("/"),
-        current: index === paths.length - 1,
-    }));
-});
-</script>
-
 <template>
-    <div
-        class="min-h-full bg-gray-50 dark:bg-gray-900"
-        style="margin-left: calc(3rem; margin-right: 4rem;"
-    >
+    <div class="min-h-full bg-gray-50 dark:bg-gray-900">
         <!-- Breadcrumb -->
         <nav
             class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5"
@@ -95,3 +63,32 @@ const breadcrumbs = computed(() => {
         </main>
     </div>
 </template>
+
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
+
+const props = defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+    subtitle: {
+        type: String,
+        default: "",
+    },
+});
+
+const route = useRoute();
+
+// Generar breadcrumbs basado en la ruta actual
+const breadcrumbs = computed(() => {
+    const paths = route.path.split("/").filter(Boolean);
+    return paths.map((path, index) => ({
+        name: path.charAt(0).toUpperCase() + path.slice(1),
+        path: "/" + paths.slice(0, index + 1).join("/"),
+        current: index === paths.length - 1,
+    }));
+});
+</script>

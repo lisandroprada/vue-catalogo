@@ -1,9 +1,10 @@
 <template>
     <div class="card mt-6">
-        <div class="card-header">
+        <div class="card-header flex justify-between items-center">
             <h2 class="text-lg font-medium text-gray-900 dark:text-white">
                 Configuraciones Generales
             </h2>
+            <Cog6ToothIcon class="h-6 w-6 text-gray-500 dark:text-gray-400" />
         </div>
         <div class="card-body">
             <form @submit.prevent="saveSettings">
@@ -41,6 +42,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { Cog6ToothIcon } from "@heroicons/vue/24/outline";
 
 const settings = ref({
     appName: "Mi Aplicación",

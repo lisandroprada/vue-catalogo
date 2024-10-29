@@ -23,7 +23,7 @@
                             isRouteActive(item.href)
                                 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                                 : 'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
-                            'h-16 flex flex-col items-center justify-center transition-colors duration-200',
+                            'h-16 flex flex-col items-center justify-center transition-colors duration-200 text-[12px]',
                         ]"
                         @click="
                             item.submenu
@@ -49,7 +49,7 @@
                     isRouteActive('/users')
                         ? 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
-                    'h-16 flex flex-col items-center justify-center transition-colors duration-200',
+                    'h-16 flex flex-col items-center justify-center transition-colors duration-200 text-[12px]',
                     'border-t border-gray-200 dark:border-gray-700',
                 ]"
             >
@@ -63,7 +63,7 @@
                     isRouteActive('/settings')
                         ? 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
-                    'h-16 flex flex-col items-center justify-center transition-colors duration-200',
+                    'h-16 flex flex-col items-center justify-center transition-colors duration-200 text-[12px]',
                     'border-t border-gray-200 dark:border-gray-700',
                 ]"
             >
@@ -106,7 +106,7 @@
                                 isRouteActive(item.href)
                                     ? 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                                     : 'text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-gray-700 dark:hover:text-gray-200',
-                                'block px-4 py-2 transition-colors duration-200',
+                                'block px-4 py-2 transition-colors duration-200 text-[12px]',
                             ]"
                             @click="closeSubmenu"
                         >
@@ -132,7 +132,6 @@ import {
     UserGroupIcon,
     FolderIcon,
     BuildingOfficeIcon,
-    CalendarIcon,
     ChartBarIcon,
     Cog6ToothIcon,
     CurrencyDollarIcon,
@@ -140,7 +139,8 @@ import {
     TruckIcon,
     BanknotesIcon,
     XMarkIcon,
-    UsersIcon, // Importamos el icono de usuarios
+    UsersIcon,
+    DocumentDuplicateIcon,
 } from "@heroicons/vue/24/outline";
 
 const menuStore = useMenuStore();
@@ -162,11 +162,7 @@ const navigation = [
         icon: BuildingOfficeIcon,
         href: "/propiedades",
     },
-    {
-        name: "Calendar",
-        icon: CalendarIcon,
-        href: "/calendar",
-    },
+
     {
         name: "Reports",
         icon: ChartBarIcon,
@@ -184,6 +180,12 @@ const navigation = [
         submenu: true,
     },
     {
+        name: "CRM",
+        icon: UserGroupIcon,
+        href: "/crm",
+    },
+
+    {
         name: "Blank Page",
         icon: DocumentTextIcon,
         href: "/blank",
@@ -195,6 +197,12 @@ const submenus = {
         { name: "Contratos", href: "/contratos", icon: DocumentTextIcon },
         { name: "Proveedores", href: "/proveedores", icon: TruckIcon },
         { name: "Bancos", href: "/bancos", icon: BanknotesIcon },
+        { name: "Caja", href: "/caja", icon: CurrencyDollarIcon },
+        {
+            name: "Facturación",
+            href: "/facturacion",
+            icon: DocumentDuplicateIcon,
+        }, // Nuevo submenú
     ],
 };
 

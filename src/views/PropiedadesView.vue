@@ -24,7 +24,7 @@ const selectedProperty = ref(null);
 const propiedadesStore = usePropiedadesStore();
 propiedadesStore.fetchPropiedades();
 
-const mapCenter = ref([-34.603722, -58.381592]); // Definir mapCenter
+const mapCenter = ref([-43.29969127755103, -65.1021053755102]); // Definir mapCenter
 const zoom = ref(13); // Definir zoom
 
 const handlePropertyClick = (property) => {
