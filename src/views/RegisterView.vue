@@ -14,15 +14,15 @@
                 class="mx-auto mb-0 mt-8 max-w-md space-y-4"
             >
                 <div>
-                    <label for="name" class="sr-only">Nombre</label>
+                    <label for="username" class="sr-only">Nombre</label>
                     <div class="relative">
                         <input
                             type="text"
-                            id="name"
-                            v-model="name"
+                            id="username"
+                            v-model="username"
                             class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                             placeholder="Nombre"
-                            autocomplete="name"
+                            autocomplete="username"
                             required
                         />
                     </div>
@@ -130,20 +130,28 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { register } from "@/services/authService";
 
-const name = ref("");
+const username = ref("");
 const email = ref("");
 const password = ref("");
 const router = useRouter();
 
-const handleRegister = () => {
-    console.log("Registrar", {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-    });
-    // Aquí iría tu lógica de registro
-    alert("Registro exitoso. Ahora puedes iniciar sesión.");
-    router.push("/login");
+const handleRegister = async () => {
+    try {
+        const userData = {
+            username: username.value,
+            email: email.value,
+            password: password.value,
+            // rememberMe: true,
+        };
+        const response = await register(userData);
+        console.log("User registered:", response);
+        alert("Registro exitoso. Ahora puedes iniciar sesión.");
+        router.push("/login");
+    } catch (error) {
+        console.error("Registration error:", error);
+        alert("Error en el registro. Por favor, intente nuevamente.");
+    }
 };
 </script>

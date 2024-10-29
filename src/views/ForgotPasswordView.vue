@@ -80,14 +80,22 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { forgotPassword } from "@/services/authService";
 
 const email = ref("");
-const router = useRouter();
 
-const handleForgotPassword = () => {
-    console.log("Recuperar Contraseña", { email: email.value });
-    // Aquí iría tu lógica de recuperación de contraseña
-    router.push("/login");
+const handleForgotPassword = async () => {
+    try {
+        const response = await forgotPassword(email.value);
+        console.log("Password reset email sent:", response);
+        alert(
+            "Correo de recuperación enviado. Por favor, revisa tu bandeja de entrada.",
+        );
+    } catch (error) {
+        console.error("Forgot password error:", error);
+        alert(
+            "Error al enviar el correo de recuperación. Por favor, intente nuevamente.",
+        );
+    }
 };
 </script>

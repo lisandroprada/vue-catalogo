@@ -19,7 +19,6 @@ import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SideBar from "./components/layout/SideBar.vue";
 import TopBar from "./components/layout/TopBar.vue";
-import Footer from "./components/layout/Footer.vue";
 import ChatDrawer from "./components/chat/ChatDrawer.vue"; // Importa el ChatDrawer
 import { useMenuStore } from "./stores/menuStore";
 import { useAuthStore } from "./stores/authStore"; // Importa el store de autenticación
@@ -42,7 +41,7 @@ watch(
 );
 
 // Determinar si el usuario está autenticado
-const isAuthenticated = computed(() => authStore.isAuthenticated);
+const isAuthenticated = computed(() => !!localStorage.getItem("authToken"));
 
 // Determinar si la ruta actual es una ruta de autenticación
 const isAuthRoute = computed(() => {

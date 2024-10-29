@@ -135,34 +135,26 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/authStore"; // Importa el store de autenticación
+import { login } from "@/services/authService";
 
 const email = ref("");
 const password = ref("");
 const rememberMe = ref(false);
 const router = useRouter();
-const authStore = useAuthStore(); // Usa el store de autenticación
 
-// Usuario y contraseña ficticios
-const fakeUser = {
-    email: "test@example.com",
-    password: "password123",
-};
-
-const handleLogin = () => {
-    if (
-        email.value === fakeUser.email &&
-        password.value === fakeUser.password
-    ) {
-        console.log("Iniciar Sesión", {
+const handleLogin = async () => {
+    try {
+        const credentials = {
             email: email.value,
             password: password.value,
             rememberMe: rememberMe.value,
-        });
-        localStorage.setItem("authToken", "fake-token"); // Simulación de autenticación
-        authStore.setAuthenticated(true); // Actualiza el estado de autenticación en el store
+        };
+        const response = await login(credentials);
+        console.log("User logged in:", response);
+        localStorage.setItem("authToken", response.access_token);
         router.push("/dashboard");
-    } else {
+    } catch (error) {
+        console.error("Login error:", error);
         alert("Usuario o contraseña incorrectos");
     }
 };

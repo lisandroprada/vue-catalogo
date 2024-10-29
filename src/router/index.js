@@ -11,11 +11,11 @@ import BlankView from "../views/BlankView.vue";
 import UsersView from "../views/UsersView.vue";
 import CajaView from "../views/CajaView.vue";
 import CRMView from "../views/CRMView.vue";
-import FacturacionView from "../views/FacturacionView.vue"; // Nueva vista
-import LoginView from "../views/LoginView.vue"; // Nueva vista
-import RegisterView from "../views/RegisterView.vue"; // Nueva vista
-import ForgotPasswordView from "../views/ForgotPasswordView.vue"; // Nueva vista
-import NotFoundView from "../views/NotFoundView.vue"; // Nueva vista
+import FacturacionView from "../views/FacturacionView.vue";
+import LoginView from "../views/LoginView.vue";
+import RegisterView from "../views/RegisterView.vue";
+import ForgotPasswordView from "../views/ForgotPasswordView.vue";
+import NotFoundView from "../views/NotFoundView.vue";
 
 const routes = [
   {

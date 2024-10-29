@@ -5,8 +5,8 @@ export const useAuthStore = defineStore("auth", {
     isAuthenticated: !!localStorage.getItem("authToken"),
   }),
   actions: {
-    setAuthenticated(value) {
-      this.isAuthenticated = value;
+    setAuthenticated(authenticated) {
+      this.isAuthenticated = authenticated;
     },
   },
 });
