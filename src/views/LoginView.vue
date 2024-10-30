@@ -134,28 +134,26 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { login } from "@/services/authService";
+import { useAuthStore } from "@/stores/authStore";
+import apiClient from "@/api/axios"; // Asegúrate de importar apiClient
 
 const email = ref("");
 const password = ref("");
-const rememberMe = ref(false);
-const router = useRouter();
+const rememberMe = ref(true);
+const authStore = useAuthStore();
 
 const handleLogin = async () => {
     try {
-        const credentials = {
+        const response = await apiClient.post("/auth/login", {
             email: email.value,
             password: password.value,
-            rememberMe: rememberMe.value,
-        };
-        const response = await login(credentials);
-        console.log("User logged in:", response);
-        localStorage.setItem("authToken", response.access_token);
-        router.push("/dashboard");
+            rememberMe: true,
+        });
+        const { user, access_token } = response.data;
+        authStore.login(user, access_token);
     } catch (error) {
-        console.error("Login error:", error);
-        alert("Usuario o contraseña incorrectos");
+        console.error("Error logging in:", error);
+        // Manejar el error de inicio de sesión aquí
     }
 };
 </script>

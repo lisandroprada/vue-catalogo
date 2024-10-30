@@ -16,6 +16,8 @@ import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import ForgotPasswordView from "../views/ForgotPasswordView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import AccessDeniedView from "../views/AccessDeniedView.vue"; // Nueva vista de acceso denegado
+import { useAuthStore } from "@/stores/authStore";
 
 const routes = [
   {
@@ -27,92 +29,95 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: DashboardView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/clientes",
     name: "clientes",
-    component: ClientesView,
-    meta: { requiresAuth: true },
+    component: () => import("@/views/ClientesView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["admin", "user"],
+    },
   },
   {
     path: "/propiedades",
     name: "propiedades",
     component: PropiedadesView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/propiedades/:id",
     name: "propiedad-detalle",
     component: () => import("../views/PropiedadDetalleView.vue"),
     props: true,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/reports",
     name: "reports",
     component: () => import("../views/ReportsView.vue"),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user"] },
   },
   {
     path: "/settings",
     name: "settings",
     component: SettingsView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin"] },
   },
   {
     path: "/creditos",
     name: "creditos",
     component: CreditosView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/contratos",
     name: "contratos",
     component: ContratosView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/proveedores",
     name: "proveedores",
     component: ProveedoresView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/bancos",
     name: "bancos",
     component: BancosView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/blank",
     name: "blank",
     component: BlankView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/users",
     name: "users",
     component: UsersView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin"] },
   },
   {
     path: "/caja",
     name: "caja",
     component: CajaView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/crm",
     name: "crm",
     component: CRMView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/facturacion",
     name: "facturacion",
     component: FacturacionView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/login",
@@ -130,6 +135,11 @@ const routes = [
     component: ForgotPasswordView,
   },
   {
+    path: "/access-denied",
+    name: "access-denied",
+    component: AccessDeniedView,
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFoundView,
@@ -143,20 +153,21 @@ const router = createRouter({
 
 // Guard de navegación para proteger rutas
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem("authToken");
-  console.log(`Navigating to: ${to.name}, Authenticated: ${isAuthenticated}`);
-  if (
-    !isAuthenticated &&
-    !["login", "register", "forgot-password"].includes(to.name)
-  ) {
-    console.log("Not authenticated, redirecting to login");
+  const authStore = useAuthStore();
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiredRoles = to.meta.roles;
+
+  if (requiresAuth && !authStore.isAuthenticated) {
     next({ name: "login" });
-  } else if (isAuthenticated && to.matched.length === 0) {
-    console.log("Authenticated but route not found, redirecting to not-found");
-    next({ name: "not-found" });
-  } else {
-    next();
+    return;
   }
+
+  if (requiredRoles && !authStore.hasAnyRole(requiredRoles)) {
+    next({ name: "access-denied" });
+    return;
+  }
+
+  next();
 });
 
 export default router;

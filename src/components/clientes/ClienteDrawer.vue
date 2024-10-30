@@ -1,237 +1,457 @@
-<script setup>
-import { ref, watch } from "vue";
-import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { useClientesStore } from "@/stores/clientesStore";
-
-const props = defineProps({
-    show: Boolean,
-    mode: {
-        type: String,
-        default: "create",
-    },
-    cliente: {
-        type: Object,
-        default: null,
-    },
-});
-
-const emit = defineEmits(["update:show"]);
-
-const clientesStore = useClientesStore();
-const formData = ref({
-    nombre: "",
-    empresa: "",
-    email: "",
-    telefono: "",
-    estado: "Activo",
-    direccion: "",
-    notas: "",
-});
-
-watch(
-    () => props.cliente,
-    (newCliente) => {
-        if (newCliente) {
-            formData.value = { ...newCliente };
-        } else {
-            formData.value = {
-                nombre: "",
-                empresa: "",
-                email: "",
-                telefono: "",
-                estado: "Activo",
-                direccion: "",
-                notas: "",
-            };
-        }
-    },
-    { immediate: true },
-);
-
-const handleSubmit = async () => {
-    try {
-        if (props.mode === "edit") {
-            await clientesStore.updateCliente(props.cliente.id, formData.value);
-        } else {
-            await clientesStore.createCliente(formData.value);
-        }
-        emit("update:show", false);
-    } catch (error) {
-        console.error("Error:", error);
-    }
-};
-</script>
-
 <template>
-    <div v-if="show" class="fixed inset-0 overflow-hidden z-50">
-        <!-- Overlay -->
-        <div
-            class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            @click="emit('update:show', false)"
-        />
-
-        <!-- Drawer -->
-        <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-            <div class="w-screen max-w-md">
+    <transition name="slide">
+        <div v-if="show" class="fixed inset-0 flex justify-end z-50">
+            <div
+                class="drawer bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md w-80"
+            >
                 <div
-                    class="h-full flex flex-col bg-white dark:bg-gray-800 shadow-xl"
+                    class="drawer-header flex justify-between items-center mb-4"
                 >
-                    <!-- Header -->
-                    <div class="px-4 py-6 bg-gray-50 dark:bg-gray-900 sm:px-6">
-                        <div class="flex items-center justify-between">
-                            <h2
-                                class="text-lg font-medium text-gray-900 dark:text-white"
+                    <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                        {{
+                            mode === "create"
+                                ? "Nuevo Cliente"
+                                : "Editar Cliente"
+                        }}
+                    </h3>
+                    <button
+                        @click="closeDrawer"
+                        class="text-red-500 hover:underline"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+                <div class="drawer-body">
+                    <form @submit.prevent="handleSubmit" class="space-y-4">
+                        <div>
+                            <label
+                                for="name"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Nombre</label
                             >
-                                {{
-                                    mode === "create"
-                                        ? "Nuevo Cliente"
-                                        : mode === "edit"
-                                          ? "Editar Cliente"
-                                          : "Ver Cliente"
-                                }}
-                            </h2>
-                            <button
-                                @click="emit('update:show', false)"
-                                class="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
-                            >
-                                <XMarkIcon class="h-6 w-6" />
-                            </button>
+                            <input
+                                v-model="form.name"
+                                id="name"
+                                type="text"
+                                required
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
                         </div>
-                    </div>
-
-                    <!-- Form -->
-                    <div
-                        class="relative flex-1 px-4 py-6 sm:px-6 overflow-y-auto"
-                    >
-                        <form @submit.prevent="handleSubmit" class="space-y-6">
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Nombre
-                                </label>
-                                <input
-                                    v-model="formData.nombre"
-                                    type="text"
-                                    required
-                                    :readonly="mode === 'view'"
-                                    class="input mt-1"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Empresa
-                                </label>
-                                <input
-                                    v-model="formData.empresa"
-                                    type="text"
-                                    required
-                                    :readonly="mode === 'view'"
-                                    class="input mt-1"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    v-model="formData.email"
-                                    type="email"
-                                    required
-                                    :readonly="mode === 'view'"
-                                    class="input mt-1"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Teléfono
-                                </label>
-                                <input
-                                    v-model="formData.telefono"
-                                    type="tel"
-                                    required
-                                    :readonly="mode === 'view'"
-                                    class="input mt-1"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Estado
-                                </label>
-                                <select
-                                    v-model="formData.estado"
-                                    :disabled="mode === 'view'"
-                                    class="input mt-1"
-                                >
-                                    <option value="Activo">Activo</option>
-                                    <option value="Inactivo">Inactivo</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Dirección
-                                </label>
-                                <textarea
-                                    v-model="formData.direccion"
-                                    :readonly="mode === 'view'"
-                                    rows="3"
-                                    class="input mt-1"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    Notas
-                                </label>
-                                <textarea
-                                    v-model="formData.notas"
-                                    :readonly="mode === 'view'"
-                                    rows="3"
-                                    class="input mt-1"
-                                />
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Footer -->
-                    <div
-                        class="flex-shrink-0 px-4 py-4 flex justify-end gap-3 bg-gray-50 dark:bg-gray-900"
-                    >
+                        <div>
+                            <label
+                                for="lastName"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Apellido</label
+                            >
+                            <input
+                                v-model="form.lastName"
+                                id="lastName"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="email"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Email</label
+                            >
+                            <input
+                                v-model="form.email"
+                                id="email"
+                                type="email"
+                                required
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="identityCard"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >DNI</label
+                            >
+                            <input
+                                v-model="form.identityCard"
+                                id="identityCard"
+                                type="text"
+                                required
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="agentType"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Tipo de Agente</label
+                            >
+                            <select
+                                v-model="form.agentType"
+                                id="agentType"
+                                required
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <option value="Client">Cliente</option>
+                                <option value="Supplier">Proveedor</option>
+                                <option value="Service Company">
+                                    Empresa de Servicios
+                                </option>
+                                <option value="Consortium">Consorcio</option>
+                                <option value="Real Estate">
+                                    Inmobiliaria
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="personType"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Tipo de Persona</label
+                            >
+                            <select
+                                v-model="form.personType"
+                                id="personType"
+                                required
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <option value="Individual">Individual</option>
+                                <option value="Legal Entity">
+                                    Entidad Legal
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="gender"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Género</label
+                            >
+                            <select
+                                v-model="form.gender"
+                                id="gender"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <option value="Female">Femenino</option>
+                                <option value="Male">Masculino</option>
+                                <option value="Non-binary">No Binario</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="maritalStatus"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Estado Civil</label
+                            >
+                            <input
+                                v-model="form.maritalStatus"
+                                id="maritalStatus"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="postalCode"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Código Postal</label
+                            >
+                            <input
+                                v-model="form.postalCode"
+                                id="postalCode"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="locality"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Localidad</label
+                            >
+                            <input
+                                v-model="form.locality._id"
+                                id="locality"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="province"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Provincia</label
+                            >
+                            <input
+                                v-model="form.province._id"
+                                id="province"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="address"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Dirección</label
+                            >
+                            <input
+                                v-model="form.address"
+                                id="address"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="workAddress"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Dirección de Trabajo</label
+                            >
+                            <input
+                                v-model="form.workAddress"
+                                id="workAddress"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="taxId"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >ID Fiscal</label
+                            >
+                            <input
+                                v-model="form.taxId"
+                                id="taxId"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="taxType"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Tipo de Impuesto</label
+                            >
+                            <input
+                                v-model="form.taxType"
+                                id="taxType"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="taxIdType"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Tipo de ID Fiscal</label
+                            >
+                            <input
+                                v-model="form.taxIdType"
+                                id="taxIdType"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="taxAddress"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Dirección Fiscal</label
+                            >
+                            <input
+                                v-model="form.taxAddress"
+                                id="taxAddress"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="iva"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >IVA</label
+                            >
+                            <input
+                                v-model="form.iva"
+                                id="iva"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="billing"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Facturación</label
+                            >
+                            <input
+                                v-model="form.billing"
+                                id="billing"
+                                type="checkbox"
+                                class="mt-1"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="supplierMask"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Máscara de Proveedor</label
+                            >
+                            <input
+                                v-model="form.supplierMask"
+                                id="supplierMask"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="phone"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Teléfono</label
+                            >
+                            <input
+                                v-model="form.phone[0].number"
+                                id="phone"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="phoneType"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Tipo de Teléfono</label
+                            >
+                            <select
+                                v-model="form.phone[0].type"
+                                id="phoneType"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <option value="home">Casa</option>
+                                <option value="work">Trabajo</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="other">Otro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="active"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Activo</label
+                            >
+                            <input
+                                v-model="form.active"
+                                id="active"
+                                type="checkbox"
+                                class="mt-1"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="user"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >Usuario</label
+                            >
+                            <input
+                                v-model="form.user"
+                                id="user"
+                                type="text"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            />
+                        </div>
                         <button
-                            type="button"
-                            class="btn-secondary"
-                            @click="emit('update:show', false)"
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            v-if="mode !== 'view'"
                             type="submit"
-                            class="btn-primary"
-                            @click="handleSubmit"
+                            class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
                         >
-                            {{ mode === "create" ? "Crear" : "Guardar" }}
+                            {{ mode === "create" ? "Crear" : "Actualizar" }}
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
+
+<script>
+import { ref, watch } from "vue";
+import { useClientesStore } from "@/stores/clientesStore";
+
+export default {
+    props: {
+        show: Boolean,
+        mode: String,
+        cliente: Object,
+    },
+    setup(props, { emit }) {
+        const clientesStore = useClientesStore();
+        const form = ref({
+            name: "",
+            lastName: "",
+            email: "",
+            identityCard: "",
+            agentType: "Client",
+            personType: "Individual",
+            gender: "",
+            maritalStatus: "",
+            postalCode: "",
+            locality: { _id: "" },
+            province: { _id: "" },
+            address: "",
+            workAddress: "",
+            taxId: "",
+            taxType: "",
+            taxIdType: "",
+            taxAddress: "",
+            iva: "",
+            billing: false,
+            supplierMask: "",
+            phone: [{ number: "", type: "other" }],
+            active: true,
+            user: "",
+        });
+
+        watch(
+            () => props.cliente,
+            (newCliente) => {
+                if (newCliente) {
+                    form.value = { ...newCliente };
+                }
+            },
+            { immediate: true, deep: true },
+        );
+
+        const handleSubmit = async () => {
+            if (props.mode === "create") {
+                await clientesStore.createCliente(form.value);
+            } else {
+                await clientesStore.updateCliente(form.value);
+            }
+            closeDrawer();
+        };
+
+        const closeDrawer = () => {
+            emit("update:show", false);
+        };
+
+        return {
+            form,
+            handleSubmit,
+            closeDrawer,
+        };
+    },
+};
+</script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+    transition: transform 0.3s ease;
+}
+.slide-enter,
+.slide-leave-to {
+    transform: translateX(100%);
+}
+</style>

@@ -1,93 +1,112 @@
-// src/stores/clientesStore.js
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import apiClient from "@/api/axios";
 
-export const useClientesStore = defineStore("clientes", () => {
-  const clientes = ref([]);
-  const filters = ref({
-    search: "",
-    estado: "",
-    empresa: "",
-    fechaDesde: "",
-    fechaHasta: "",
-  });
+export const useClientesStore = defineStore("clientes", {
+  state: () => ({
+    clientes: [],
+    searchTerm: "",
+    pageSize: 10,
+    page: 0,
+    sort: "",
+    totalPages: 0,
+  }),
+  getters: {
+    getClientes: (state) => state.clientes,
+    getTotalPages: (state) => state.totalPages,
+    getIsLoading: (state) => state.isLoading,
+  },
+  actions: {
+    async fetchClientes() {
+      this.isLoading = true;
+      this.error = null;
 
-  const filteredClientes = computed(() => {
-    return clientes.value.filter((cliente) => {
-      if (filters.value.search) {
-        const searchTerm = filters.value.search.toLowerCase();
-        if (
-          !cliente.nombre.toLowerCase().includes(searchTerm) &&
-          !cliente.email.toLowerCase().includes(searchTerm)
-        ) {
-          return false;
+      const params = {
+        pageSize: this.pageSize,
+        page: this.page,
+        sort: this.sort,
+        search: this.searchTerm
+          ? {
+              criteria: [
+                { field: "name", term: this.searchTerm, operation: "contains" },
+              ],
+            }
+          : undefined,
+      };
+
+      try {
+        const response = await apiClient.get("/party", { params });
+        this.clientes = response.data.items;
+        this.totalPages = response.data.totalPages;
+      } catch (error) {
+        console.error("Error fetching clientes:", error);
+        this.error = error.message;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async createCliente(clienteData) {
+      try {
+        const response = await apiClient.post("/party", clienteData);
+        this.clientes.push(response.data);
+      } catch (error) {
+        console.error("Error creating cliente:", error);
+      }
+    },
+    async updateCliente(clienteData) {
+      try {
+        const response = await apiClient.patch(
+          `/party/${clienteData._id}`,
+          clienteData,
+        );
+        const index = this.clientes.findIndex(
+          (cliente) => cliente._id === clienteData._id,
+        );
+        if (index !== -1) {
+          this.clientes[index] = response.data;
         }
+      } catch (error) {
+        console.error("Error updating cliente:", error);
       }
-
-      if (filters.value.estado && cliente.estado !== filters.value.estado) {
-        return false;
+    },
+    async deleteCliente(clienteId) {
+      try {
+        await apiClient.delete(`/party/${clienteId}`);
+        this.clientes = this.clientes.filter(
+          (cliente) => cliente._id !== clienteId,
+        );
+      } catch (error) {
+        console.error("Error deleting cliente:", error);
       }
-
-      if (
-        filters.value.empresa &&
-        !cliente.empresa
-          .toLowerCase()
-          .includes(filters.value.empresa.toLowerCase())
-      ) {
-        return false;
+    },
+    setSearchTerm(term) {
+      this.searchTerm = term;
+      this.page = 0; // Reset to first page
+      this.fetchClientes();
+    },
+    setPageSize(size) {
+      this.pageSize = size;
+      this.page = 0; // Reset to first page
+      this.fetchClientes();
+    },
+    setPage(page) {
+      this.page = page;
+      this.fetchClientes();
+    },
+    setSort(sort) {
+      this.sort = sort;
+      this.fetchClientes();
+    },
+    prevPage() {
+      if (this.page > 0) {
+        this.page -= 1;
+        this.fetchClientes();
       }
-
-      // Aquí puedes añadir más filtros según necesites
-
-      return true;
-    });
-  });
-
-  const createCliente = async (clienteData) => {
-    // Aquí iría tu lógica de API
-    const newCliente = {
-      id: Date.now(), // Temporal, normalmente vendría del backend
-      ...clienteData,
-      createdAt: new Date().toISOString(),
-    };
-    clientes.value.push(newCliente);
-  };
-
-  const updateCliente = async (id, clienteData) => {
-    // Aquí iría tu lógica de API
-    const index = clientes.value.findIndex((c) => c.id === id);
-    if (index !== -1) {
-      clientes.value[index] = { ...clientes.value[index], ...clienteData };
-    }
-  };
-
-  const deleteCliente = async (id) => {
-    // Aquí iría tu lógica de API
-    clientes.value = clientes.value.filter((c) => c.id !== id);
-  };
-
-  const setFilters = (newFilters) => {
-    filters.value = { ...newFilters };
-  };
-
-  const resetFilters = () => {
-    filters.value = {
-      search: "",
-      estado: "",
-      empresa: "",
-      fechaDesde: "",
-      fechaHasta: "",
-    };
-  };
-
-  return {
-    clientes,
-    filteredClientes,
-    filters,
-    createCliente,
-    updateCliente,
-    deleteCliente,
-    setFilters,
-    resetFilters,
-  };
+    },
+    nextPage() {
+      if (this.page < this.totalPages - 1) {
+        this.page += 1;
+        this.fetchClientes();
+      }
+    },
+  },
 });

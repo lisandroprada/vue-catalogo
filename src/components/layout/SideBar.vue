@@ -14,10 +14,9 @@
 
             <!-- Navigation -->
             <nav class="flex-1 pt-2">
-                <template v-for="item in navigation">
+                <template v-for="item in filteredNavigation" :key="item.name">
                     <RouterLink
                         v-if="item.href"
-                        :key="item.name"
                         :to="item.href"
                         :class="[
                             isRouteActive(item.href)
@@ -44,6 +43,7 @@
 
             <!-- Users and Settings at bottom -->
             <RouterLink
+                v-if="isAdmin"
                 to="/users"
                 :class="[
                     isRouteActive('/users')
@@ -58,6 +58,7 @@
             </RouterLink>
 
             <RouterLink
+                v-if="isAdmin"
                 to="/settings"
                 :class="[
                     isRouteActive('/settings')
@@ -124,9 +125,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useMenuStore } from "@/stores/menuStore";
 import { useActiveRoute } from "@/composables/useActiveRoute";
+import { useAuthStore } from "@/stores/authStore";
 import {
     HomeIcon,
     UserGroupIcon,
@@ -144,67 +146,106 @@ import {
 } from "@heroicons/vue/24/outline";
 
 const menuStore = useMenuStore();
+const authStore = useAuthStore();
 const { isRouteActive } = useActiveRoute();
+
+// Computed properties para roles
+const userRoles = computed(() => authStore.roles || []);
+const isAdmin = computed(() => userRoles.value.includes("admin"));
 
 const navigation = [
     {
         name: "Dashboard",
         icon: HomeIcon,
         href: "/",
+        roles: ["admin", "super-user", "user"],
     },
     {
         name: "Clientes",
         icon: UserGroupIcon,
         href: "/clientes",
+        roles: ["admin", "super-user", "user"],
     },
     {
         name: "Propiedades",
         icon: BuildingOfficeIcon,
         href: "/propiedades",
+        roles: ["admin", "super-user", "user"],
     },
-
     {
         name: "Reports",
         icon: ChartBarIcon,
         href: "/reports",
+        roles: ["admin", "super-user"],
     },
     {
         name: "Créditos",
         icon: CurrencyDollarIcon,
         href: "/creditos",
+        roles: ["admin", "super-user", "user"],
     },
     {
         name: "Aplicaciones",
         icon: FolderIcon,
         href: "#",
         submenu: true,
+        roles: ["admin", "super-user", "user"],
     },
     {
         name: "CRM",
         icon: UserGroupIcon,
         href: "/crm",
+        roles: ["admin", "super-user", "user"],
     },
-
     {
         name: "Blank Page",
         icon: DocumentTextIcon,
         href: "/blank",
+        roles: ["admin", "super-user", "user"],
     },
 ];
 
 const submenus = {
     aplicaciones: [
-        { name: "Contratos", href: "/contratos", icon: DocumentTextIcon },
-        { name: "Proveedores", href: "/proveedores", icon: TruckIcon },
-        { name: "Bancos", href: "/bancos", icon: BanknotesIcon },
-        { name: "Caja", href: "/caja", icon: CurrencyDollarIcon },
+        {
+            name: "Contratos",
+            href: "/contratos",
+            icon: DocumentTextIcon,
+            roles: ["admin", "super-user", "user"],
+        },
+        {
+            name: "Proveedores",
+            href: "/proveedores",
+            icon: TruckIcon,
+            roles: ["admin", "super-user", "user"],
+        },
+        {
+            name: "Bancos",
+            href: "/bancos",
+            icon: BanknotesIcon,
+            roles: ["admin", "super-user", "user"],
+        },
+        {
+            name: "Caja",
+            href: "/caja",
+            icon: CurrencyDollarIcon,
+            roles: ["admin", "super-user", "user"],
+        },
         {
             name: "Facturación",
             href: "/facturacion",
             icon: DocumentDuplicateIcon,
-        }, // Nuevo submenú
+            roles: ["admin", "super-user", "user"],
+        },
     ],
 };
+
+// Filtrar navegación basada en roles
+const filteredNavigation = computed(() => {
+    return navigation.filter((item) =>
+        item.roles.some((role) => userRoles.value.includes(role)),
+    );
+});
 
 const isOpen = ref(true);
 const activeSubmenu = ref(null);
@@ -248,3 +289,7 @@ onBeforeUnmount(() => {
     document.removeEventListener("keydown", handleEscapeKey);
 });
 </script>
+
+<style scoped>
+/* Puedes agregar estilos específicos aquí si los necesitas */
+</style>

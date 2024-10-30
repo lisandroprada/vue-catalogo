@@ -1,45 +1,3 @@
-<script setup>
-import ViewWrapper from "@/components/layout/ViewWrapper.vue";
-import ClientesList from "@/components/clientes/ClientesList.vue";
-import ClienteDrawer from "@/components/clientes/ClienteDrawer.vue";
-import FilterDrawer from "@/components/clientes/FilterDrawer.vue";
-import { ref, computed } from "vue";
-import {
-    PlusIcon,
-    FunnelIcon,
-    ArrowDownTrayIcon,
-} from "@heroicons/vue/24/outline";
-import { useClientesStore } from "@/stores/clientesStore";
-
-const clientesStore = useClientesStore();
-const showClienteDrawer = ref(false);
-const showFilterDrawer = ref(false);
-const drawerMode = ref("create"); // 'create' | 'edit' | 'view'
-const selectedCliente = ref(null);
-
-const handleNewCliente = () => {
-    drawerMode.value = "create";
-    selectedCliente.value = null;
-    showClienteDrawer.value = true;
-};
-
-const handleEditCliente = (cliente) => {
-    drawerMode.value = "edit";
-    selectedCliente.value = cliente;
-    showClienteDrawer.value = true;
-};
-
-const handleViewCliente = (cliente) => {
-    drawerMode.value = "view";
-    selectedCliente.value = cliente;
-    showClienteDrawer.value = true;
-};
-
-const handleExportData = () => {
-    // Lógica para exportar datos
-};
-</script>
-
 <template>
     <ViewWrapper title="Clientes" subtitle="Gestión de clientes y contactos">
         <template #actions>
@@ -68,8 +26,20 @@ const handleExportData = () => {
             </div>
         </template>
 
-        <!-- Lista principal -->
-        <ClientesList @edit="handleEditCliente" @view="handleViewCliente" />
+        <div class="flex">
+            <!-- Drawer para filtros -->
+            <div class="w-64 mr-4">
+                <FilterDrawer v-model:show="showFilterDrawer" />
+            </div>
+
+            <!-- Lista principal -->
+            <div class="flex-1 overflow-x-auto">
+                <ClientesList
+                    @edit="handleEditCliente"
+                    @view="handleViewCliente"
+                />
+            </div>
+        </div>
 
         <!-- Drawer para crear/editar cliente -->
         <ClienteDrawer
@@ -77,8 +47,66 @@ const handleExportData = () => {
             :mode="drawerMode"
             :cliente="selectedCliente"
         />
-
-        <!-- Drawer para filtros -->
-        <FilterDrawer v-model:show="showFilterDrawer" />
     </ViewWrapper>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import ViewWrapper from "@/components/layout/ViewWrapper.vue";
+import ClientesList from "@/components/clientes/ClientesList.vue";
+import ClienteDrawer from "@/components/clientes/ClienteDrawer.vue";
+import FilterDrawer from "@/components/clientes/FilterDrawer.vue";
+import {
+    PlusIcon,
+    FunnelIcon,
+    ArrowDownTrayIcon,
+} from "@heroicons/vue/24/outline";
+import { useClientesStore } from "@/stores/clientesStore";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "vue-router";
+
+const clientesStore = useClientesStore();
+const authStore = useAuthStore();
+const router = useRouter();
+
+const showClienteDrawer = ref(false);
+const showFilterDrawer = ref(false);
+const drawerMode = ref("create");
+const selectedCliente = ref(null);
+
+const handleNewCliente = () => {
+    drawerMode.value = "create";
+    selectedCliente.value = null;
+    showClienteDrawer.value = true;
+};
+
+const handleEditCliente = (cliente) => {
+    drawerMode.value = "edit";
+    selectedCliente.value = cliente;
+    showClienteDrawer.value = true;
+};
+
+const handleViewCliente = (cliente) => {
+    drawerMode.value = "view";
+    selectedCliente.value = cliente;
+    showClienteDrawer.value = true;
+};
+
+const handleExportData = () => {
+    // Implementar lógica de exportación
+};
+
+onMounted(async () => {
+    if (!authStore.isAuthenticated) {
+        router.push({ name: "login" });
+        return;
+    }
+
+    if (!authStore.hasAnyRole(["admin", "user"])) {
+        router.push({ name: "access-denied" });
+        return;
+    }
+
+    await clientesStore.fetchClientes();
+});
+</script>
