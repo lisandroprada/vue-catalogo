@@ -34,7 +34,7 @@
         </nav>
 
         <!-- Main container -->
-        <div class="container mx-auto px-2 py-6 w-[95%]">
+        <div class="container mx-auto px-2 py-6 w-[90%]">
             <!-- Header -->
             <header class="bg-white dark:bg-gray-800 shadow-sm px-4 py-4">
                 <div class="flex items-center justify-between">

@@ -4,11 +4,15 @@ import apiClient from "@/api/axios";
 export const useClientesStore = defineStore("clientes", {
   state: () => ({
     clientes: [],
+    cliente: null,
     searchTerm: "",
+    searchCriteria: [],
     pageSize: 10,
     page: 0,
     sort: "",
     totalPages: 0,
+    isLoading: false,
+    error: null,
   }),
   getters: {
     getClientes: (state) => state.clientes,
@@ -17,20 +21,14 @@ export const useClientesStore = defineStore("clientes", {
   },
   actions: {
     async fetchClientes() {
-      this.isLoading = true;
-      this.error = null;
-
       const params = {
         pageSize: this.pageSize,
         page: this.page,
         sort: this.sort,
-        search: this.searchTerm
-          ? {
-              criteria: [
-                { field: "name", term: this.searchTerm, operation: "contains" },
-              ],
-            }
-          : undefined,
+        search:
+          this.searchCriteria.length > 0
+            ? { criteria: this.searchCriteria }
+            : undefined,
       };
 
       try {
@@ -39,6 +37,14 @@ export const useClientesStore = defineStore("clientes", {
         this.totalPages = response.data.totalPages;
       } catch (error) {
         console.error("Error fetching clientes:", error);
+      }
+    },
+    async fetchClienteById(id) {
+      this.isLoading = true;
+      try {
+        const response = await apiClient.get(`/party/${id}`);
+        this.cliente = response.data;
+      } catch (error) {
         this.error = error.message;
       } finally {
         this.isLoading = false;
@@ -78,8 +84,22 @@ export const useClientesStore = defineStore("clientes", {
         console.error("Error deleting cliente:", error);
       }
     },
+    async generateUniqueId() {
+      try {
+        const response = await apiClient.post("/party/generate-unique-id");
+        return response.data;
+      } catch (error) {
+        console.error("Error generating unique ID:", error);
+        throw error;
+      }
+    },
     setSearchTerm(term) {
       this.searchTerm = term;
+      this.page = 0; // Reset to first page
+      this.fetchClientes();
+    },
+    setSearchCriteria(criteria) {
+      this.searchCriteria = criteria;
       this.page = 0; // Reset to first page
       this.fetchClientes();
     },

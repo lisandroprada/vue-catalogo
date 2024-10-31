@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
-import DashboardView from "../views/DashboardView.vue";
-import ClientesView from "../views/ClientesView.vue";
-import SettingsView from "../views/SettingsView.vue";
-import PropiedadesView from "../views/PropiedadesView.vue";
-import ContratosView from "../views/ContratosView.vue";
-import CreditosView from "../views/CreditosView.vue";
-import ProveedoresView from "../views/ProveedoresView.vue";
-import BancosView from "../views/BancosView.vue";
-import BlankView from "../views/BlankView.vue";
-import UsersView from "../views/UsersView.vue";
-import CajaView from "../views/CajaView.vue";
-import CRMView from "../views/CRMView.vue";
-import FacturacionView from "../views/FacturacionView.vue";
-import LoginView from "../views/LoginView.vue";
-import RegisterView from "../views/RegisterView.vue";
-import ForgotPasswordView from "../views/ForgotPasswordView.vue";
-import NotFoundView from "../views/NotFoundView.vue";
-import AccessDeniedView from "../views/AccessDeniedView.vue"; // Nueva vista de acceso denegado
+import DashboardView from "../views/app/DashboardView.vue";
+import SettingsView from "../views/admin/SettingsView.vue";
+import PropiedadesView from "../views/app/PropiedadesView.vue";
+import ContratosView from "../views/app/ContratosView.vue";
+import CreditosView from "../views/app/CreditosView.vue";
+import ProveedoresView from "../views/app/ProveedoresView.vue";
+import BancosView from "../views/app/BancosView.vue";
+import BlankView from "../views/app/BlankView.vue";
+import UsersView from "../views/admin/UsersView.vue";
+import CajaView from "../views/app/CajaView.vue";
+import CRMView from "../views/app/CRMView.vue";
+import FacturacionView from "../views/app/FacturacionView.vue";
+import LoginView from "../views/auth/LoginView.vue";
+import RegisterView from "../views/auth/RegisterView.vue";
+import ForgotPasswordView from "../views/auth/ForgotPasswordView.vue";
+import NotFoundView from "../views/auth/NotFoundView.vue";
+import AccessDeniedView from "../views/auth/AccessDeniedView.vue"; // Nueva vista de acceso denegado
+import ProfileView from "../views/admin/ProfileView.vue";
 import { useAuthStore } from "@/stores/authStore";
 
 const routes = [
@@ -34,7 +34,16 @@ const routes = [
   {
     path: "/clientes",
     name: "clientes",
-    component: () => import("@/views/ClientesView.vue"),
+    component: () => import("@/views/app/ClientesView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["admin", "user"],
+    },
+  },
+  {
+    path: "/clientes/:id",
+    name: "clientes-form",
+    component: () => import("@/views/app/ClienteFormView.vue"),
     meta: {
       requiresAuth: true,
       roles: ["admin", "user"],
@@ -49,14 +58,14 @@ const routes = [
   {
     path: "/propiedades/:id",
     name: "propiedad-detalle",
-    component: () => import("../views/PropiedadDetalleView.vue"),
+    component: () => import("../views/app/PropiedadDetalleView.vue"),
     props: true,
     meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
     path: "/reports",
     name: "reports",
-    component: () => import("../views/ReportsView.vue"),
+    component: () => import("../views/app/ReportsView.vue"),
     meta: { requiresAuth: true, roles: ["admin", "super-user"] },
   },
   {
@@ -93,6 +102,12 @@ const routes = [
     path: "/blank",
     name: "blank",
     component: BlankView,
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
+  },
+  {
+    path: "/profile",
+    name: "perfil",
+    component: ProfileView,
     meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
