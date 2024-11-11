@@ -198,6 +198,12 @@ const navigation = [
         roles: ["admin", "super-user", "user"],
     },
     {
+        name: "Tassación",
+        icon: UserGroupIcon,
+        href: "/tasacion",
+        roles: ["admin", "super-user", "user"],
+    },
+    {
         name: "Blank Page",
         icon: DocumentTextIcon,
         href: "/blank",

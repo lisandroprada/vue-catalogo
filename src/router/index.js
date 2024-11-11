@@ -129,6 +129,12 @@ const routes = [
     meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
   },
   {
+    path: "/tasacion",
+    name: "tasacion",
+    component: () => import("../views/app/TasacionView.vue"),
+    meta: { requiresAuth: true, roles: ["admin", "super-user", "user"] },
+  },
+  {
     path: "/facturacion",
     name: "facturacion",
     component: FacturacionView,
