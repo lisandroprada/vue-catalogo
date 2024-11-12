@@ -59,6 +59,7 @@
             <FormSelect
                 :modelValue="localForm.tipoLote"
                 @update:modelValue="localForm.tipoLote = $event"
+                id="tipoLote"
                 label="Tipo de Lote"
                 :options="[
                     { value: 'centro', text: 'Centro' },
@@ -69,6 +70,7 @@
                 v-if="localForm.tipoLote === 'esquina'"
                 :modelValue="localForm.ochava"
                 @update:modelValue="localForm.ochava = $event"
+                id="ochava"
                 label="Ubicación de la Ochava"
                 :options="[
                     { value: 'izquierda-arriba', text: 'Izquierda Arriba' },

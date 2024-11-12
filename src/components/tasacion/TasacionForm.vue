@@ -102,13 +102,13 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import Stepper from "@/components/ui/Stepper.vue";
-import PropertyInformationStep from "@/components/tasacion/PropertyInformationStep.vue";
-import DimensionsStep from "@/components/tasacion/DimensionsStep.vue";
-import AgeConditionStep from "@/components/tasacion/AgeConditionStep.vue";
-import ServicesAmenitiesStep from "@/components/tasacion/ServicesAmenitiesStep.vue";
-import UserPreferencesStep from "@/components/tasacion/UserPreferencesStep.vue";
-import ValuationResultStep from "@/components/tasacion/ValuationResultStep.vue";
-import CalculationDetailsStep from "@/components/tasacion/CalculationDetailsStep.vue";
+import AgeConditionStep from "@/components/tasacion/tasacion/AgeConditionStep.vue";
+import CalculationDetailsStep from "@/components/tasacion/tasacion/CalculationDetailsStep.vue";
+import DimensionsStep from "@/components/tasacion/tasacion/DimensionsStep.vue";
+import PropertyInformationStep from "@/components/tasacion/tasacion/PropertyInformationStep.vue";
+import ServicesAmenitiesStep from "@/components/tasacion/tasacion/ServicesAmenitiesStep.vue";
+import UserPreferencesStep from "@/components/tasacion/tasacion/UserPreferencesStep.vue";
+import ValuationResultStep from "@/components/tasacion/tasacion/ValuationResultStep.vue";
 import { mockData } from "@/api/mockApi"; // Importa los datos simulados
 import {
     calcularValorComparativo,

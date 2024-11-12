@@ -16,8 +16,8 @@
 import { ref } from "vue";
 import ViewWrapper from "@/components/layout/ViewWrapper.vue";
 import Tabs from "@/components/ui/Tabs.vue";
-import Tasacion2Form from "@/components/tasacion/Tasacion2Form.vue";
-import ParametrosStep from "@/components/tasacion/ParametrosStep.vue";
+import TasacionForm from "@/components/tasacion/TasacionForm.vue";
+import ParametrosForm from "@/components/tasacion/ParametrosForm.vue";
 
 import { DocumentTextIcon } from "@heroicons/vue/24/outline";
 
@@ -55,19 +55,19 @@ const tabs = [
     {
         name: "Tasación",
         icon: DocumentTextIcon,
-        component: Tasacion2Form,
+        component: TasacionForm,
         props: { form: form.value },
     },
     {
         name: "Historial de Tasaciones",
         icon: DocumentTextIcon,
-        component: Tasacion2Form,
+        component: TasacionForm,
         // props: { form: form.value },
     },
     {
         name: "Parámetros",
         icon: DocumentTextIcon,
-        component: ParametrosStep,
+        component: ParametrosForm,
         // props: { form: form.value },
     },
 ];

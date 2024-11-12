@@ -20,13 +20,15 @@
         </select>
         <label
             :for="id"
-            :class="{
-                '-top-2 left-2.5 text-xs text-slate-400 dark:text-slate-300 scale-90':
-                    modelValue || isFocused,
-                'top-2.5 left-2.5 text-sm text-slate-400 dark:text-slate-300 scale-100':
-                    !modelValue && !isFocused,
-            }"
-            class="absolute cursor-text bg-gray-100 dark:bg-gray-800 px-1 transition-all transform origin-left"
+            :class="[
+                'absolute cursor-text px-1 transition-all transform origin-left',
+                {
+                    '-top-2 left-2.5 text-xs text-slate-400 dark:text-slate-300 scale-90 bg-gray-100 dark:bg-gray-800':
+                        modelValue || isFocused,
+                    'top-2.5 left-2.5 text-sm text-slate-400 dark:text-slate-300 scale-100 bg-transparent':
+                        !modelValue && !isFocused,
+                },
+            ]"
         >
             {{ label }}
         </label>

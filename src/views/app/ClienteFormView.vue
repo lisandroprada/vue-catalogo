@@ -44,6 +44,7 @@ import ClienteDashboardTab from "@/components/clientes/ClienteDashboardTab.vue";
 import ClienteBankInfoTab from "@/components/clientes/ClienteBankInfoTab.vue";
 import ClientePropertiesTab from "@/components/clientes/ClientePropertiesTab.vue";
 import ClienteCommunicationsTab from "@/components/clientes/ClienteCommunicationsTab.vue";
+import CuentaForm from "@/components/clientes/account-status/CuentaForm.vue";
 import { useClientesStore } from "@/stores/clientesStore";
 import { useProvincesStore } from "@/stores/provincesStore";
 import { useLocalitiesStore } from "@/stores/localitiesStore";
@@ -81,6 +82,7 @@ const localities = ref([]);
 
 const tabs = shallowRef([
     { name: "Dashboard", icon: UserIcon, component: ClienteDashboardTab },
+    { name: "Estado de Cuenta", icon: MapIcon, component: CuentaForm },
     { name: "General", icon: UserIcon, component: ClienteGeneralForm },
     { name: "Contacto", icon: PhoneIcon, component: ClienteContactTab },
     { name: "Bancos", icon: MapIcon, component: ClienteBankInfoTab },
