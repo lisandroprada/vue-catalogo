@@ -76,7 +76,7 @@ const handleSelectLocation = (result) => {
                 :value="searchQuery"
                 @input="handleInput"
                 @focus="showResults = true"
-                class="block w-full rounded-md border-gray-300 pr-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm"
+                class="peer w-full bg-transparent placeholder:text-slate-400 text-slate-700 dark:text-slate-300 text-sm border border-gray-400 dark:border-slate-600 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-gray-600 dark:focus:border-slate-500 hover:border-gray-500 dark:hover:border-slate-500 shadow-sm focus:shadow"
                 placeholder="Buscar dirección..."
             />
             <div class="absolute inset-y-0 right-0 flex items-center pr-3">

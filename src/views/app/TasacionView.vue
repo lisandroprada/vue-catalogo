@@ -16,9 +16,9 @@
 import { ref } from "vue";
 import ViewWrapper from "@/components/layout/ViewWrapper.vue";
 import Tabs from "@/components/ui/Tabs.vue";
-// import TasacionResultado from "@/components/tasacion/TasacionResultado.vue";
 import Tasacion2Form from "@/components/tasacion/Tasacion2Form.vue";
-// import Modal from "@/components/ui/Modal.vue";
+import ParametrosStep from "@/components/tasacion/ParametrosStep.vue";
+
 import { DocumentTextIcon } from "@heroicons/vue/24/outline";
 
 const title = "Tasación de Inmuebles";
@@ -67,7 +67,7 @@ const tabs = [
     {
         name: "Parámetros",
         icon: DocumentTextIcon,
-        component: Tasacion2Form,
+        component: ParametrosStep,
         // props: { form: form.value },
     },
 ];

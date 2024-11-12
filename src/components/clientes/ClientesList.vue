@@ -5,87 +5,57 @@
             <h3 class="text-lg font-semibold mb-4">Filtros</h3>
             <form @submit.prevent="applyFilters">
                 <div class="mb-4">
-                    <label
-                        for="name"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >Nombre</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.name"
-                        @input="handleInput"
                         id="name"
+                        label="Nombre"
                         type="text"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="mb-4">
-                    <label
-                        for="lastName"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >Apellido</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.lastName"
-                        @input="handleInput"
                         id="lastName"
+                        label="Apellido"
                         type="text"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="mb-4">
-                    <label
-                        for="email"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >Email</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.email"
-                        @input="handleInput"
                         id="email"
+                        label="Email"
                         type="email"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="mb-4">
-                    <label
-                        for="phone"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >Teléfono</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.phone"
-                        @input="handleInput"
                         id="phone"
+                        label="Teléfono"
                         type="text"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="mb-4">
-                    <label
-                        for="address"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >Dirección</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.address"
-                        @input="handleInput"
                         id="address"
+                        label="Dirección"
                         type="text"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="mb-4">
-                    <label
-                        for="taxId"
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300"
-                        >CUIT/CUIL</label
-                    >
-                    <input
+                    <FormInput
                         v-model="filters.taxId"
-                        @input="handleInput"
                         id="taxId"
+                        label="CUIT/CUIL"
                         type="text"
-                        class="input-field w-full"
+                        @input="handleInput"
                     />
                 </div>
                 <div class="flex gap-2">
@@ -379,6 +349,7 @@ import {
     MagnifyingGlassIcon,
     XMarkIcon,
 } from "@heroicons/vue/20/solid"; // Cambiado a MagnifyingGlassIcon
+import FormInput from "@/components/ui/FormInput.vue";
 
 const router = useRouter();
 

@@ -24,4 +24,10 @@ export const mockData = {
     dolarOficial: 150,
     dolarBlue: 200,
   },
+  economicIndicators: [
+    { date: "2023-01", ipc: 5.1, icc: 4.8, icl: 5.0 },
+    { date: "2023-02", ipc: 5.3, icc: 4.9, icl: 5.1 },
+    { date: "2023-03", ipc: 5.5, icc: 5.0, icl: 5.2 },
+    // Agrega más datos según sea necesario
+  ],
 };
