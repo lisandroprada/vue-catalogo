@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto p-4 bg-gray-50 min-h-screen">
+    <div class="container mx-auto p-4 bg-gray-50">
         <!-- Filtro de fecha y totalizadores -->
         <div
             class="mb-6 bg-white shadow-sm rounded-lg p-4"
