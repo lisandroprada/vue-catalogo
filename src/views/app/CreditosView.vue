@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import ViewWrapper from "@/components/layout/ViewWrapper.vue";
@@ -51,13 +51,7 @@ async function fetchUVAValue() {
         if (response.data && response.data.length > 0) {
             const latestData = response.data[response.data.length - 1];
             valorUVA.value = latestData.valor.toFixed(2);
-            fechaActualizacion.value = new Date(
-                latestData.fecha,
-            ).toLocaleDateString("es-AR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            });
+            fechaActualizacion.value = latestData.fecha;
         }
     } catch (error) {
         console.error("Error al obtener el valor de la UVA:", error);
@@ -207,9 +201,9 @@ onMounted(() => {
         </div>
 
         <div v-if="activeTab === 'simulator'" class="mt-6">
-            <CreditSimulator
-                :valorUVAProp="valorUVA"
-                :fechaActualizacion="fechaActualizacion"
+            <CreditSimulator 
+                :valor-u-v-a-prop="valorUVA"
+                :fecha-actualizacion-prop="fechaActualizacion"
             />
         </div>
 

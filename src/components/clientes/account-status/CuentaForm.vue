@@ -261,22 +261,17 @@
                                     : "Monto a cobrar:"
                             }}
                         </label>
-                        <div class="relative rounded-md shadow-sm flex-grow">
-                            <div
-                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                            >
-                                <span class="text-gray-500 sm:text-xs">$</span>
-                            </div>
-                            <input
-                                type="number"
-                                v-model.number="item.montoALiquidar"
-                                :max="Math.abs(item.monto)"
-                                :min="0"
-                                @input="validarMonto(item)"
-                                class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 sm:text-xs border-gray-300 rounded-md"
-                                placeholder="0.00"
-                            />
-                        </div>
+                        <FormCurrencyInput
+                            v-model="item.montoALiquidar"
+                            :id="'monto-' + item.id"
+                            :options="{
+                                currency: 'ARS',
+                                locale: 'es-AR',
+                                autoDecimalMode: true,
+                                hideCurrencySymbol: false,
+                                hideGroupingSeparator: false,
+                            }"
+                        />
                     </div>
                 </li>
             </ul>
@@ -324,6 +319,8 @@ import {
     ScaleIcon,
     CheckIcon,
 } from "@heroicons/vue/24/outline";
+import { mockAsientos } from "@/api/mockApi.js";
+import FormCurrencyInput from "@/components/ui/FormCurrencyInput.vue";
 
 // Función para generar fechas aleatorias
 function randomDate(start, end) {
@@ -333,104 +330,7 @@ function randomDate(start, end) {
 }
 
 // Datos de ejemplo con más asientos y fechas de vencimiento
-const asientos = ref([
-    {
-        id: 1,
-        descripcion: "Alquiler Apto 101",
-        tipo: "Crédito",
-        monto: 1000,
-        disponible: "Saldo a liquidar: $1000",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 2,
-        descripcion: "Honorarios inmobiliarios",
-        tipo: "Débito",
-        monto: -100,
-        disponible: "Recaudado: $100",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 3,
-        descripcion: "Reparación plomería",
-        tipo: "Débito",
-        monto: -200,
-        disponible: "Recaudado: $200",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 4,
-        descripcion: "Alquiler Local 3",
-        tipo: "Crédito",
-        monto: 1500,
-        disponible: "Saldo a liquidar: $1500",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 5,
-        descripcion: "Impuesto municipal",
-        tipo: "Débito",
-        monto: -300,
-        disponible: "Recaudado: $300",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 6,
-        descripcion: "Alquiler Apto 202",
-        tipo: "Crédito",
-        monto: 1200,
-        disponible: "Saldo a liquidar: $1200",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 7,
-        descripcion: "Mantenimiento ascensor",
-        tipo: "Débito",
-        monto: -150,
-        disponible: "Recaudado: $150",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 8,
-        descripcion: "Alquiler Cochera 5",
-        tipo: "Crédito",
-        monto: 200,
-        disponible: "Saldo a liquidar: $200",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 9,
-        descripcion: "Seguro edificio",
-        tipo: "Débito",
-        monto: -500,
-        disponible: "Recaudado: $500",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 10,
-        descripcion: "Alquiler Local 7",
-        tipo: "Crédito",
-        monto: 2000,
-        disponible: "Saldo a liquidar: $2000",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 11,
-        descripcion: "Gastos administrativos",
-        tipo: "Débito",
-        monto: -80,
-        disponible: "Recaudado: $80",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-    {
-        id: 12,
-        descripcion: "Alquiler Apto 303",
-        tipo: "Crédito",
-        monto: 1300,
-        disponible: "Saldo a liquidar: $1300",
-        vencimiento: randomDate(new Date(2024, 10, 1), new Date(2024, 11, 31)),
-    },
-]);
+const asientos = ref(mockAsientos);
 
 const carrito = ref([]);
 const drawerAbierto = ref(false);

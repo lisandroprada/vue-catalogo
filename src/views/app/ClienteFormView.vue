@@ -38,7 +38,6 @@ import { ref, onMounted, watch, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import ViewWrapper from "@/components/layout/ViewWrapper.vue";
 import ClienteGeneralForm from "@/components/clientes/ClienteGeneralForm.vue";
-import ClienteAddressTab from "@/components/clientes/ClienteAddressTab.vue";
 import ClienteContactTab from "@/components/clientes/ClienteContactTab.vue";
 import ClienteDashboardTab from "@/components/clientes/ClienteDashboardTab.vue";
 import ClienteBankInfoTab from "@/components/clientes/ClienteBankInfoTab.vue";

@@ -67,21 +67,20 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
+import { defineComponent, defineProps } from 'vue';
 
-const props = defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-    subtitle: {
-        type: String,
-        default: "",
-    },
+defineComponent({
+    name: 'ViewWrapper'
 });
+
+defineProps<{
+    title: string;
+    subtitle?: string;
+}>();
 
 const route = useRoute();
 

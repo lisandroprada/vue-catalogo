@@ -59,6 +59,11 @@ import {
     LinearScale,
     PointElement,
 } from "chart.js";
+import { defineComponent } from 'vue';
+
+defineComponent({
+    name: 'UvaData'
+});
 
 ChartJS.register(
     Title,
